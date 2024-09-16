@@ -1,14 +1,15 @@
 
 const gameBoard = (function () {
-  const board = [['', '', '']
-  ['', '', '']
-  ['', '', '']]
+  const board = [ ['', '', '']
+                  ['', '', '']
+                  ['', '', ''] ]
 
   const getBoard = (() => {
     for (row in board) {
       console.log(row);
     }
   })
+
   const takePosition = (function (player, x, y) {
     if (x > 2 || x < 0 || y > 2 || y < 0) {
       return console.log("Invalid coordinates")
@@ -16,9 +17,15 @@ const gameBoard = (function () {
       board[x][y] = player.getSymbol();
     }
   })
-  return {getBoard, takePosition}
-})
 
+  const clearBoard = (() => {
+    board = [ ['', '', '']
+              ['', '', '']
+              ['', '', ''] ]
+  })
+  
+  return {getBoard, takePosition, clearBoard}
+})
 
 function createPlayer (name, symbol) {
   const name = name;
@@ -44,3 +51,6 @@ function createPlayer (name, symbol) {
   return {getName, getSymbol, getWins, wonGame};
 }
 
+function game (gameBoard, Player1, Player2) {
+  
+}
