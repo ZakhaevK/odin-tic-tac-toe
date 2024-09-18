@@ -90,7 +90,7 @@ function createGame(gameBoard, player1, player2) {
   const playTurn = () => {
     let posX = parseInt(prompt(`${currentPlayer.getName()}, enter row:`));
     let posY = parseInt(prompt(`${currentPlayer.getName()}, enter column:`));
-    if (posX < 0 || posX > 2 || posY < 0 || posXY> 2 ) {
+    if (posX < 0 || posX > 2 || posY < 0 || posY > 2 ) {
       console.log("Invalid coordinates, try again")
       posX = parseInt(prompt(`${currentPlayer.getName()}, enter row:`));
       posY = parseInt(prompt(`${currentPlayer.getName()}, enter column:`));
