@@ -5,6 +5,10 @@ const gameBoard = (function () {
     ['', '', '']
   ];
 
+  const getBoard = () => {
+    return board;
+  }
+
   const printBoard = () => {
     for (let row of board) {
       console.log(row);
@@ -27,45 +31,7 @@ const gameBoard = (function () {
     ];
   };
 
-  const checkWinner = (player) => {
-    let count = 0;
-
-    // Check rows for winner
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        if (board[i][j] == player.getSymbol()) { count++; }
-        if (count == 3) { return true; }
-      }
-      count = 0;
-    }
-
-    // Check columns for winner
-    count = 0;
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        if (board[j][i] == player.getSymbol()) { count++; }
-        if (count == 3) { return true; }
-      }
-      count = 0;
-    }
-
-    // Check diagonal lines
-    count = 0;
-    for (let i = 0; i < 3; i++) {
-      if (board[i][i] == player.getSymbol()) { count++; }
-      if (count == 3) { return true; }
-    }
-
-    count = 0;
-    for (let i = 0, j = 2; i < 3; i++, j--) {
-      if (board[i][j] == player.getSymbol()) { count++; }
-      if (count == 3) { return true; }
-    }
-
-    return false;
-  };
-
-  return { printBoard, takePosition, clearBoard, checkWinner };
+  return { getBoard, printBoard, takePosition, clearBoard };
 })();
 
 function createPlayer(name, symbol) {
@@ -104,7 +70,7 @@ function createGame(gameBoard, player1, player2) {
     while (!gameFinished && turns < 9) {
       playTurn();
       gameBoard.printBoard();
-      gameFinished = gameBoard.checkWinner(currentPlayer);
+      gameFinished = checkWinner(currentPlayer);
       if (gameFinished) {
         currentPlayer.wonGame();
         console.log(`The winner is ${currentPlayer.getName()}`);
@@ -116,7 +82,46 @@ function createGame(gameBoard, player1, player2) {
     console.log("Game is tied!");
   };
 
-  return { playTurn, playGame };
+  const checkWinner = (player) => {
+    let count = 0;
+    let board = gameBoard.getBoard();
+
+    // Check rows for winner
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        if (board[i][j] == player.getSymbol()) { count++; }
+        if (count == 3) { return true; }
+      }
+      count = 0;
+    }
+
+    // Check columns for winner
+    count = 0;
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        if (board[j][i] == player.getSymbol()) { count++; }
+        if (count == 3) { return true; }
+      }
+      count = 0;
+    }
+
+    // Check diagonal lines
+    count = 0;
+    for (let i = 0; i < 3; i++) {
+      if (board[i][i] == player.getSymbol()) { count++; }
+      if (count == 3) { return true; }
+    }
+
+    count = 0;
+    for (let i = 0, j = 2; i < 3; i++, j--) {
+      if (board[i][j] == player.getSymbol()) { count++; }
+      if (count == 3) { return true; }
+    }
+
+    return false;
+  };
+
+  return { playTurn, playGame, checkWinner };
 }
 
 const player1 = createPlayer('Player 1', 'X');
