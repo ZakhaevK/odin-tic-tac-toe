@@ -1,14 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tic Tac Toe Project</title>
+  <title>Tic Tac Toe</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
 
-  
+<body>
+  <div id="sidebar">
+    <h1>Player Stats</h1>
+    <form>
+      <ul>
+        <li>
+          <p>Player 1 Wins:</p>
+        </li>
+
+
+        <li>
+          <p>Player 2 Wins:</p>
+        </li>
+
+        <li>
+          <button id="new-game">New Game</button>
+        </li>
+      </ul>
+    </form>
+  </div>
+  <div id="game-div">
+    <div id="grid-0-0">-</div>
+    <div id="grid-0-1">-</div>
+    <div id="grid-0-2">-</div>
+    <div id="grid-1-0">-</div>
+    <div id="grid-1-1">-</div>
+    <div id="grid-1-2">-</div>
+    <div id="grid-2-0">-</div>
+    <div id="grid-2-1">-</div>
+    <div id="grid-2-2">-</div>
+  </div>
+
 </body>
 <script src="tictactoe.js" defer></script>
+
 </html>

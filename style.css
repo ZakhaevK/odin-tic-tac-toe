@@ -1,0 +1,53 @@
+body {
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  background-color: black;
+  grid-template-columns: 1fr 2fr;
+  width: 600px;
+  margin: auto;
+}
+
+#sidebar {
+  color: aliceblue;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 15px;
+  background-color: rgb(173, 142, 39);
+}
+
+#sidebar ul {
+  margin: 0;
+  padding: 0;
+}
+
+#sidebar li {
+  display: flex;
+  justify-content: space-between;
+  align-items:center;
+  padding: 6px 0;
+}
+
+#sidebar li:nth-child(3) {
+  justify-content: center;
+}
+
+#game-div {
+  display: grid;
+  justify-content:space-around;
+  background-color: rgb(49, 49, 63);
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-flow: row;
+  gap: 10px;
+  padding: 10px;
+}
+
+#game-div div {
+  display: flex;
+  color: white;
+  border: 1px solid white;
+  font-size: 2em;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+}

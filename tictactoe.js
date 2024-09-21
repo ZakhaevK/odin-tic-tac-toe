@@ -1,3 +1,4 @@
+// IIFE for the gameBoard utilised by the game
 const gameBoard = (function () {
   let board = [ 
     ['', '', ''],
@@ -34,6 +35,12 @@ const gameBoard = (function () {
   return { getBoard, printBoard, takePosition, clearBoard };
 })();
 
+// IIFE featuring all DOM functions
+const DOMHandler = (function () { 
+
+})
+
+// Creation of player and related data
 function createPlayer(name, symbol) {
   let wins = 0;
 
@@ -50,6 +57,7 @@ function createPlayer(name, symbol) {
   return { getName, getSymbol, getWins, wonGame };
 }
 
+// Each game is created using this factory
 function createGame(gameBoard, player1, player2) {
   let currentPlayer = player1;
 
