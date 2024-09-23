@@ -62,12 +62,19 @@ function createGame(gameBoard, player1, player2) {
 
     DOMHandler.updateCell(position, currentPlayer.getSymbol());
 
-    if (checkWinner(currentPlayer)) {
+    const result = checkWinner(currentPlayer);
+
+    if (result === "win") {
       currentPlayer.wonGame();
       DOMHandler.updateWins(currentPlayer);
       gameInProgress = false;
       console.log(`${currentPlayer.getName()} wins!`);
-    } else {
+    } else if (result === "tie") {
+      DOMHandler.updateWins("tie");  // Pass "tie" to updateWins to handle it properly
+      gameInProgress = false;
+      console.log("It's a tie!");
+    }
+    else {
       currentPlayer = (currentPlayer === player1) ? player2 : player1;
     }
   };
@@ -87,7 +94,7 @@ function createGame(gameBoard, player1, player2) {
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
         if (board[i][j] == player.getSymbol()) { count++; }
-        if (count == 3) { return true; }
+        if (count == 3) { return "win"; }
       }
       count = 0;
     }
@@ -97,7 +104,7 @@ function createGame(gameBoard, player1, player2) {
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
         if (board[j][i] == player.getSymbol()) { count++; }
-        if (count == 3) { return true; }
+        if (count == 3) { return "win"; }
       }
       count = 0;
     }
@@ -106,13 +113,18 @@ function createGame(gameBoard, player1, player2) {
     count = 0;
     for (let i = 0; i < 3; i++) {
       if (board[i][i] == player.getSymbol()) { count++; }
-      if (count == 3) { return true; }
+      if (count == 3) { return "win"; }
     }
 
     count = 0;
     for (let i = 0, j = 2; i < 3; i++, j--) {
       if (board[i][j] == player.getSymbol()) { count++; }
-      if (count == 3) { return true; }
+      if (count == 3) { return "win"; }
+    }
+
+    const isBoardFull = board.every(row => row.every(cell => cell !== ''));
+    if (isBoardFull) {
+      return "tie";
     }
 
     return false;
@@ -152,9 +164,11 @@ const DOMHandler = (function () {
   };
 
   const updateWins = (player) => {
-    if (player === player1) {
+    if (player === "tie") {
+      gameWinnerPara.textContent = `The match is a draw!`
+    } else if (player === player1) {
       p1WinsPara.textContent = `${player1.getName()}'s Wins: ${player1.getWins()}`;
-    } else {
+    } else if (player === player2) {
       p2WinsPara.textContent = `${player2.getName()}'s Wins: ${player2.getWins()}`;
     }
     gameWinnerPara.textContent = `${player.getName()} has won the match!`
