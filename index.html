@@ -14,30 +14,34 @@
     <form>
       <ul>
         <li>
-          <p>Player 1 Wins:</p>
+          <p id="p1-wins">Player 1 Wins: 0</p>
         </li>
 
 
         <li>
-          <p>Player 2 Wins:</p>
+          <p id="p2-wins">Player 2 Wins: 0</p>
         </li>
 
         <li>
-          <button id="new-game">New Game</button>
+          <button id="new-game" type="button">New Game</button>
+        </li>
+
+        <li>
+          <p id="game-winner"></p>
         </li>
       </ul>
     </form>
   </div>
   <div id="game-div">
-    <div id="grid-0-0">-</div>
-    <div id="grid-0-1">-</div>
-    <div id="grid-0-2">-</div>
-    <div id="grid-1-0">-</div>
-    <div id="grid-1-1">-</div>
-    <div id="grid-1-2">-</div>
-    <div id="grid-2-0">-</div>
-    <div id="grid-2-1">-</div>
-    <div id="grid-2-2">-</div>
+    <div class="cell" data-position="0"></div>
+    <div class="cell" data-position="1"></div>
+    <div class="cell" data-position="2"></div>
+    <div class="cell" data-position="3"></div>
+    <div class="cell" data-position="4"></div>
+    <div class="cell" data-position="5"></div>
+    <div class="cell" data-position="6"></div>
+    <div class="cell" data-position="7"></div>
+    <div class="cell" data-position="8"></div>
   </div>
 
 </body>

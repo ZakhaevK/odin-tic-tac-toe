@@ -1,44 +1,34 @@
 // IIFE for the gameBoard utilised by the game
 const gameBoard = (function () {
-  let board = [ 
+  let board = [
     ['', '', ''],
     ['', '', ''],
     ['', '', '']
   ];
 
-  const getBoard = () => {
-    return board;
-  }
-
-  const printBoard = () => {
-    for (let row of board) {
-      console.log(row);
-    }
-  };
+  const getBoard = () => board;
 
   const takePosition = (player, x, y) => {
-    if (x > 2 || x < 0 || y > 2 || y < 0) {
-      console.log("Invalid coordinates");
-    } else {
+    if (board[x][y] === '') {
       board[x][y] = player.getSymbol();
+      return true;
+    } else {
+      console.log("Position already taken.");
+      return false;
     }
   };
 
   const clearBoard = () => {
-    board = [ 
+    board = [
       ['', '', ''],
       ['', '', ''],
       ['', '', '']
     ];
   };
 
-  return { getBoard, printBoard, takePosition, clearBoard };
+  return { getBoard, takePosition, clearBoard };
 })();
 
-// IIFE featuring all DOM functions
-const DOMHandler = (function () { 
-
-})
 
 // Creation of player and related data
 function createPlayer(name, symbol) {
@@ -57,37 +47,36 @@ function createPlayer(name, symbol) {
   return { getName, getSymbol, getWins, wonGame };
 }
 
-// Each game is created using this factory
+// The game is created using this factory
 function createGame(gameBoard, player1, player2) {
   let currentPlayer = player1;
+  let gameInProgress = true;
 
-  const playTurn = () => {
-    let posX = parseInt(prompt(`${currentPlayer.getName()}, enter row:`));
-    let posY = parseInt(prompt(`${currentPlayer.getName()}, enter column:`));
-    if (posX < 0 || posX > 2 || posY < 0 || posY > 2 ) {
-      console.log("Invalid coordinates, try again")
-      posX = parseInt(prompt(`${currentPlayer.getName()}, enter row:`));
-      posY = parseInt(prompt(`${currentPlayer.getName()}, enter column:`));
-    }
-    gameBoard.takePosition(currentPlayer, posX, posY);
-  };
+  const playTurn = (position) => {
+    if (!gameInProgress) return;
+    // This converts to positin to 2D for board update
+    const posX = Math.floor(position / 3);
+    const posY = position % 3;
 
-  const playGame = () => {
-    let gameFinished = false;
-    let turns = 0;
-    while (!gameFinished && turns < 9) {
-      playTurn();
-      gameBoard.printBoard();
-      gameFinished = checkWinner(currentPlayer);
-      if (gameFinished) {
-        currentPlayer.wonGame();
-        console.log(`The winner is ${currentPlayer.getName()}`);
-        return;
-      }
-      turns++;
+    if (!gameBoard.takePosition(currentPlayer, posX, posY)) return;
+
+    DOMHandler.updateCell(position, currentPlayer.getSymbol());
+
+    if (checkWinner(currentPlayer)) {
+      currentPlayer.wonGame();
+      DOMHandler.updateWins(currentPlayer);
+      gameInProgress = false;
+      console.log(`${currentPlayer.getName()} wins!`);
+    } else {
       currentPlayer = (currentPlayer === player1) ? player2 : player1;
     }
-    console.log("Game is tied!");
+  };
+
+  const resetGame = () => {
+    gameBoard.clearBoard();
+    DOMHandler.clearCells();
+    currentPlayer = player1;
+    gameInProgress = true;
   };
 
   const checkWinner = (player) => {
@@ -129,10 +118,61 @@ function createGame(gameBoard, player1, player2) {
     return false;
   };
 
-  return { playTurn, playGame, checkWinner };
+  return { playTurn, resetGame };
 }
 
-const player1 = createPlayer('Player 1', 'X');
-const player2 = createPlayer('Player 2', 'O');
+// Initialisation of all objects for game
+const p1Name = prompt("What is Player 1's name?")
+const p2Name = prompt("What is Player 2's name?")
+
+const player1 = createPlayer(p1Name, 'X');
+const player2 = createPlayer(p2Name, 'O');
+
+// IIFE featuring all DOM functions, uses player names so needs to be here
+const DOMHandler = (function () {
+  const p1WinsPara = document.getElementById("p1-wins");
+  const p2WinsPara = document.getElementById("p2-wins");
+  const gameWinnerPara = document.getElementById("game-winner");
+  const gridCells = document.querySelectorAll(".cell");
+
+  p1WinsPara.textContent = `${player1.getName()}'s Wins: 0`;
+  p2WinsPara.textContent = `${player2.getName()}'s Wins: 0`;
+
+  const updateCell = (position, symbol) => {
+    gridCells[position].textContent = symbol;
+  };
+
+  const addClickListeners = (playTurn) => {
+    gridCells.forEach((cell) => {
+      cell.addEventListener("click", () => {
+        const position = cell.getAttribute("data-position");
+        playTurn(position);
+      });
+    });
+  };
+
+  const updateWins = (player) => {
+    if (player === player1) {
+      p1WinsPara.textContent = `${player1.getName()}'s Wins: ${player1.getWins()}`;
+    } else {
+      p2WinsPara.textContent = `${player2.getName()}'s Wins: ${player2.getWins()}`;
+    }
+    gameWinnerPara.textContent = `${player.getName()} has won the match!`
+  };
+
+  const clearCells = () => {
+    gridCells.forEach((cell) => {
+      cell.textContent = "";
+    });
+    gameWinnerPara.textContent = "";
+  };
+
+  return { updateCell, addClickListeners, updateWins, clearCells };
+})();
+
+
+// Game initialisation and related listeners
 const game = createGame(gameBoard, player1, player2);
-game.playGame();
+
+DOMHandler.addClickListeners(game.playTurn);
+document.getElementById("new-game").addEventListener("click", game.resetGame);
